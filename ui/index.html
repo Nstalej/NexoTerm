@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>NexoTerm</title><link rel="stylesheet" href="xterm.css"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="titlebar"><div class="brand"><span class="logo">N›</span><span>Nexo<span class="brand-light">Term</span></span><span class="version">PREVIEW 0.1</span></div><div class="title-description">Tu conexión. Tu contexto. Tu espacio de trabajo.</div><button id="guide" class="subtle">Guía rápida</button></header>
+<div class="layout">
+<aside>
+<div class="section-heading"><span>ESPACIO DE TRABAJO</span><span class="persist-dot" title="La configuración permanece abierta">●</span></div>
+<nav class="side-nav"><button data-panel="connection" class="selected">Conexión</button><button data-panel="provider">Asistente</button><button data-panel="history">Historial</button></nav>
+<section id="connection" class="side-panel">
+<h2>Nueva conexión</h2><p class="muted">Abre una terminal sin perder tus opciones.</p>
+<form id="connection-form">
+<label>Nombre de la sesión<input id="profile-name" placeholder="Switch principal" maxlength="100"></label>
+<label>Protocolo<select id="protocol"><option value="ssh">SSH · conexión segura</option><option value="telnet">Telnet</option><option value="serial">Serial · puerto COM</option><option value="local">PowerShell local</option></select></label>
+<label id="host-label">Host / dirección IP<input id="host" placeholder="192.168.1.1" maxlength="253" autocomplete="off" spellcheck="false"></label>
+<div class="two-fields"><label id="port-label">Puerto<input id="port" type="number" min="1" max="65535" value="22"></label><label id="user-label">Usuario<input id="username" placeholder="Opcional" maxlength="128" autocomplete="off"></label></div>
+<label id="serial-label" hidden>Parámetros seriales<input id="serial" value="9600,8,n,1,N"><small>Baudios, bits, paridad, parada, flujo</small></label>
+<button class="primary wide" type="submit" id="connect">＋ Abrir terminal</button>
+</form>
+<div class="divider"></div><div class="label-row"><h3>Perfiles guardados</h3><button id="save-profile" class="subtle small">Guardar actual</button></div>
+<select id="profiles" aria-label="Perfiles guardados"><option value="">Selecciona un perfil</option></select><div class="profile-actions"><button id="load-profile" class="subtle small">Cargar</button><button id="delete-profile" class="subtle small">Eliminar</button></div>
+<div class="tip"><span>◈</span><p>Las contraseñas se ingresan en la terminal. Los perfiles no guardan contraseñas.</p></div>
+</section>
+<section id="provider" class="side-panel" hidden>
+<h2>Tu asistente</h2><p class="muted">Elige un proveedor. Cada usuario utiliza su propia clave.</p>
+<form id="provider-form">
+<label>Tipo de proveedor<select id="provider-kind"><option value="compatible">API compatible con OpenAI</option><option value="anthropic">Anthropic</option><option value="ollama">Ollama · modelo local</option></select></label>
+<label>URL base<input id="base-url" type="url" value="https://api.openai.com/v1" placeholder="https://proveedor/v1" required spellcheck="false"></label>
+<label>Modelo<input id="model" placeholder="Nombre del modelo disponible" required maxlength="200" spellcheck="false"></label>
+<label>Clave API<input id="api-key" type="password" autocomplete="off" placeholder="Sin configurar" maxlength="4096"></label>
+<label class="check"><input id="remember-key" type="checkbox"> Recordar clave cifrada en Windows</label>
+<label class="check"><input id="clear-key" type="checkbox"> Eliminar la clave actual</label>
+<button class="primary wide" type="submit">Guardar proveedor</button>
+</form><p class="muted" id="key-status">No hay clave configurada.</p>
+<div class="divider"></div><h3>Conexión MCP</h3><p class="muted">Actívala desde Sesión para compartir esa pestaña con un cliente MCP. Acceso local, autenticado y de solo lectura.</p>
+<button id="copy-mcp" class="wide">Copiar configuración MCP</button><button id="stop-mcp" class="subtle wide">Apagar servidor MCP</button>
+</section>
+<section id="history" class="side-panel" hidden><div class="label-row"><h2>Sesiones anteriores</h2><button id="refresh-history" class="subtle small">Actualizar</button></div><p class="muted">Reabre la bitácora y su conversación. Reconectar inicia una sesión nueva.</p><div id="history-list"></div></section>
+<div class="aside-footer"><span class="persist-dot">●</span> Configuración persistente<br><small id="data-location">Datos locales por usuario</small></div>
+</aside>
+<main>
+<div class="workspace-toolbar"><div class="workspace-label">TERMINALES <span id="session-count">0</span></div><div class="toolbar-actions"><span id="record-indicator" class="muted">Sin sesión activa</span><button id="toggle-assistant" class="subtle">Asistente</button><div class="menu-wrap"><button id="session-menu-button">Sesión ▾</button><div id="session-menu" class="menu" hidden>
+<button data-action="reconnect">Nueva conexión con este perfil</button><button data-action="disconnect">Desconectar terminal</button><hr><button data-action="record">Pausar / reanudar registro</button><button data-action="save">Guardar Markdown ahora</button><button data-action="folder">Abrir carpeta de la sesión</button><button data-action="evidence">Revisar evidencias</button><button data-action="access">Confirmar acceso al equipo</button><button data-action="pdf">Generar informe PDF</button><hr><button data-action="mcp">Activar / desactivar MCP</button>
+</div></div></div></div>
+<div id="tabs" role="tablist" aria-label="Terminales abiertas"></div>
+<div id="welcome"><div class="welcome-mark">N›</div><span class="eyebrow">UN LUGAR PARA CADA SESIÓN</span><h1>Conecta. Trabaja.<br>Conserva el contexto.</h1><p>Tu terminal y tu asistente comparten un espacio.<br>La configuración se queda contigo.</p><button id="local-welcome" class="primary">Probar con PowerShell local →</button><div class="welcome-features"><span>SSH / Telnet / Serial</span><span>Markdown + PDF</span><span>LLM configurable</span></div></div>
+<div id="session-workspace" hidden><section id="assistant-pane"><div class="pane-header"><div><span class="accent">◈</span> Asistente de sesión</div><span class="badge">TÚ DECIDES</span></div><div id="messages" aria-live="polite"></div><div class="context-options"><label class="check"><input type="checkbox" id="share-context"> Compartir salida depurada con el LLM</label><small>Solo se envía al preguntar. El asistente no ejecuta comandos.</small></div></section><section id="terminal-pane"><div class="pane-header"><span id="terminal-title">Terminal</span><div class="terminal-tools"><label>Tamaño <select id="font-size"><option>12</option><option selected>14</option><option>16</option><option>18</option><option>20</option></select></label><button id="capture-evidence" class="subtle small">＋ Evidencia</button></div></div><div id="terminal-host"></div><div id="terminal-status" class="terminal-status">Lista</div></section></div>
+</main></div>
+<footer class="composer"><div class="composer-label"><span class="accent">◈</span><strong>Pregunta al asistente</strong><span id="composer-session">Selecciona una sesión</span></div><form id="chat-form"><textarea id="chat-input" rows="2" maxlength="12000" placeholder="Escribe una pregunta sobre la configuración…  Ctrl+Enter para enviar" aria-label="Pregunta al asistente"></textarea><button id="send-chat" class="primary" type="submit">Enviar ↗</button></form><div class="composer-footer"><span>La terminal sigue activa mientras conversas.</span><span id="provider-label">Configura tu proveedor en Asistente</span></div></footer>
+<div id="toast" role="status" hidden></div>
+<dialog id="evidence-dialog"><div class="dialog-top"><div><span class="eyebrow">DOCUMENTA LO QUE FUNCIONÓ</span><h2>Evidencias de la sesión</h2></div><button id="close-evidence" class="subtle">Cerrar ✕</button></div><p class="muted">Selecciona texto en la terminal antes de abrir este panel, o pega un fragmento depurado. Solo «Validado» se incorpora al informe.</p><textarea id="evidence-text" rows="8" placeholder="Fragmento de terminal"></textarea><div class="evidence-controls"><label>Lenguaje<select id="evidence-language"><option value="text">Texto</option><option value="cisco">Cisco</option><option value="bash">Bash</option><option value="powershell">PowerShell</option><option value="json">JSON</option></select></label><label>Resultado<select id="evidence-status"><option value="pending">Pendiente de validar</option><option value="verified">Validado por mí</option><option value="failed">Fallido · excluir del informe</option></select></label><button id="save-evidence" class="primary">Agregar evidencia</button></div><div id="evidence-list"></div></dialog>
+<dialog id="guide-dialog"><div class="dialog-top"><h2>Guía rápida de NexoTerm</h2><button id="close-guide" class="subtle">Cerrar ✕</button></div><div id="guide-text"></div></dialog>
+<script src="app.js"></script></body></html>

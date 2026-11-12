@@ -1,0 +1,8 @@
+node_modules/
+release/
+ui/app.js
+ui/xterm.css
+.env*
+*.log
+test-results/
+vendor/plink.exe
