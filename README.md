@@ -4,6 +4,13 @@ Terminal para Windows con configuración persistente, conexiones basadas en PuTT
 
 **Estado: 0.1.0 preview.** Primera versión funcional. Proyecto independiente de PuTTY; no modifica la instalación existente. Windows 10/11 de 64 bits.
 
+## Descargas
+
+- [Instalador Windows x64](https://github.com/Nstalej/NexoTerm/releases/download/v0.1.0/NexoTerm-0.1.0-setup.exe)
+- [Ejecutable portable Windows x64](https://github.com/Nstalej/NexoTerm/releases/download/v0.1.0/NexoTerm-0.1.0-portable.exe)
+- [Release, archivos y checksums](https://github.com/Nstalej/NexoTerm/releases/tag/v0.1.0)
+- [Guía rápida: configurar proveedor LLM y servidor MCP](docs/CONFIGURACION.md)
+
 ## Funciones
 
 - Configuración a la izquierda que permanece abierta al iniciar o terminar conexiones.
